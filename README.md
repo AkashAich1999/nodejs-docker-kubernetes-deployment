@@ -126,3 +126,54 @@ we will write: containerPort:3000
     ```terminal
     minikube service <service-name>
     ```
+
+        
+9. Scale and Monitor: Once the App is Running, we may want to:
+   * Increase the Number of Pods (Scale Our Application).
+   * Monitor Logs and Pod statuses in real time.
+     
+   
+   1. Scale Your Deployment:  
+      1.1 Using command-line to scale:  
+
+      ```terminal
+      kubectl scale deployment <deployment-name> --replicas=3
+      ```
+      * This tells Kubernetes to run 3 Copies (Replicas) of our Node.js Container in the Cluster.
+
+      1.2. OR edit deployment configuration manually: 
+      * If we're managing YAML files, change the Replicas Count in deployment.yaml:    
+  
+  
+       ```terminal
+       spec:
+         replicas: 3
+       ```
+     
+      * Then apply the updated config:    
+  
+ 
+       ```terminal
+       kubectl apply -f deployment.yaml
+       ```
+
+   2. Monitor the Deployment:  
+      2.1. View Pod Logs:
+      ```terminal
+      kubectl logs <pod-name>
+      ```
+        Find the Pod Name using:
+        ```terminal
+        kubectl get pods
+        ```
+        Then check logs:
+        ```terminal
+        kubectl logs nodejs-deployment-xxxxxxxxxxx-yyyyy
+        ```
+      2.2. Describe Pod for Detailed Debugging:
+      ```terminal
+      kubectl describe pod <pod-name>
+      ```
+      * This helps find issues like failing containers, missing images, port conflicts, etc.
+
+
