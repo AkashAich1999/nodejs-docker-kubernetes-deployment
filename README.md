@@ -2,6 +2,8 @@
 
 <img width="1722" height="933" alt="nodejs_docker_k8" src="https://github.com/user-attachments/assets/ace7b0cc-d09c-48ee-a7c3-3c625dfa64c0" />  
 
+
+
 ### Tools & Technologies Used:   
 1. Node.js
 2. Docker  
@@ -46,5 +48,81 @@ Deployed a Node.js Application using Docker and Kubernetes (Minikube). The proce
    docker push yourusername/nodejs_docker_kubernetes_deployment:1.0
    ```
 
-   This Service exposes Our Deployment (and Therefore your App) to the Outside World or within the Cluster, depending on the type (NodePort, ClusterIP, etc.).
-   The Service creates a Stable Network Endpoint (URL or IP:Port) for your App.
+5. Set up Local Kubernetes with Minikube:
+   Use Minikube to run a Local Kubernetes (k8s) Cluster on our Machine. (This gives us a Testing Environment that simulates how Kubernetes works in Production.)
+   ```terminal
+   minikube start
+   ```
+6. Create Kubernetes Manifests:
+   * Write deployment.yaml to define the desired state for running Pods (replicas of your container).    
+  
+  
+   ```terminal
+   cd k8s
+   ```  
+   ```terminal
+   kubectl create deployment nodejs-docker-kubernetes-deployment --image=yourusername/nodejs_docker_kubernetes_deployment:1.0 --dry-run=client -o yaml > deployment.yaml
+   ```
+   * deployment.yaml file that defines a Kubernetes Deployment Resource.
+   * Inside deployment.yaml file, we change replicas:3 from replicas:1.
+   * Also Inside deployment.yaml, 
+we will write: containerPort:3000 
+
+   * Write service.yaml to expose our application (typically using NodePort or LoadBalancer service in Minikube).
+
+   ```terminal
+   kubectl expose deployment nodejs-docker-kubernetes-deployment --port=80 --target-port=3000 --type=LoadBalancer --dry-run=client -o yaml > service.yaml
+   ```
+
+7. Deploy the Application to Kubernetes:
+   * Apply the deployment manifest:  
+  
+  
+   ```terminal
+   kubectl apply -f deployment.yaml
+   ```
+   * Apply the service manifest:  
+   
+ 
+   ```terminal
+   kubectl apply -f service.yaml
+   ```
+
+8. Verify and Access the Deployment:  
+
+   * What This Step Does:  
+       * Ensures your Node.js App started correctly.
+
+       * Verifies that the Pods are Running.
+
+       * Finds the correct URL/Port to access the App in your Browser.
+
+    * Commands to Use:
+    1. Check Deployments:  
+  
+    
+   ```terminal
+   kubectl get deployments
+   ```  
+
+   2. Check Pods:  
+
+  
+   ```terminal
+   kubectl get pods
+   ```
+
+   3. Check Services: 
+  
+   
+   ```terminal
+   kubectl get services
+      ```
+
+   4. Get the Application URL: If you exposed the service using NodePort or LoadBalancer, use:  
+  
+      
+
+    ```terminal
+    minikube service <service-name>
+    ```
